@@ -1,8 +1,7 @@
 class AuthPM {
   constructor() {
-    console.log("init");
+    console.log('init');
   }
-
 }
 
 export default AuthPM;
