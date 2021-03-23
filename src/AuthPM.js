@@ -1,6 +1,6 @@
-class AuthPM {
-  static #url = 'https://net-api-hbyuu.ondigitalocean.app';
+import AuthAPI from './AuthAPI';
 
+class AuthPM {
   #appId;
 
   #target;
@@ -23,18 +23,15 @@ class AuthPM {
 
     if (AuthPM.#isDomElement(possibleTarget)) {
       this.#target = possibleTarget;
+    } else {
+      console.warn('Can not find target, check configuration');
     }
   }
 
   #getAppList() {
-    fetch(`${AuthPM.#url}/Socials`, {
-      headers: {
-        'Content-Type': 'application/json',
-        App_id: this.#appId,
-      },
-    })
-      .then((res) => res.json())
-      .then(({ socials }) => this.#renderSocials(socials));
+    AuthAPI.getAppList(this.#appId).then(({ socials }) =>
+      this.#renderSocials(socials)
+    );
   }
 
   #renderSocials(socials) {
@@ -43,16 +40,9 @@ class AuthPM {
       btn.type = 'button';
       btn.textContent = name;
       btn.addEventListener('click', () => {
-        fetch(`${AuthPM.#url}/Socials/auth-link`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            App_id: this.#appId,
-          },
-          body: JSON.stringify({ social_id: id }),
-        })
-          .then((res) => res.json())
-          .then((data) => AuthPM.#openLoginWindow(data));
+        AuthAPI.getAuthLink({ appId: this.#appId, socialId: id }).then((data) =>
+          AuthPM.#openLoginWindow(data)
+        );
       });
 
       this.#target.appendChild(btn);
