@@ -1,4 +1,6 @@
 class AuthPM {
+  static #url = 'https://net-api-hbyuu.ondigitalocean.app';
+
   #appId;
 
   #target;
@@ -7,7 +9,8 @@ class AuthPM {
     this.#appId = appId;
 
     this.#setTarget(target);
-    this.#getAppList();
+
+    this.#target && this.#getAppList();
   }
 
   #setTarget(target) {
@@ -24,7 +27,40 @@ class AuthPM {
   }
 
   #getAppList() {
-    console.log(this.#appId);
+    fetch(`${AuthPM.#url}/Socials`, {
+      headers: {
+        'Content-Type': 'application/json',
+        App_id: this.#appId,
+      },
+    })
+      .then((res) => res.json())
+      .then(({ socials }) => this.#renderSocials(socials));
+  }
+
+  #renderSocials(socials) {
+    socials.forEach(({ id, name }) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = name;
+      btn.addEventListener('click', () => {
+        fetch(`${AuthPM.#url}/Socials/auth-link`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            App_id: this.#appId,
+          },
+          body: JSON.stringify({ social_id: id }),
+        })
+          .then((res) => res.json())
+          .then((data) => AuthPM.#openLoginWindow(data));
+      });
+
+      this.#target.appendChild(btn);
+    });
+  }
+
+  static #openLoginWindow(urlConfig) {
+    console.log(urlConfig);
   }
 
   static #isDomElement(obj) {
