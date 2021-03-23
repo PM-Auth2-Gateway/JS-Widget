@@ -29,9 +29,11 @@ class AuthPM {
   }
 
   #getAppList() {
-    AuthAPI.getAppList(this.#appId).then(({ socials }) =>
-      this.#renderSocials(socials)
-    );
+    AuthAPI.getAppList(this.#appId)
+      .then(({ socials }) => this.#renderSocials(socials))
+      .catch(() => {
+        console.warn(`Can not find application settings`);
+      });
   }
 
   #renderSocials(socials) {
@@ -40,9 +42,11 @@ class AuthPM {
       btn.type = 'button';
       btn.textContent = name;
       btn.addEventListener('click', () => {
-        AuthAPI.getAuthLink({ appId: this.#appId, socialId: id }).then((data) =>
-          AuthPM.#openLoginWindow(data)
-        );
+        AuthAPI.getAuthLink({ appId: this.#appId, socialId: id })
+          .then((data) => AuthPM.#openLoginWindow(data))
+          .catch(() => {
+            console.warn('Something went wrong, sorry');
+          });
       });
 
       this.#target.appendChild(btn);

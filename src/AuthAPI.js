@@ -7,7 +7,7 @@ class AuthAPI {
         'Content-Type': 'application/json',
         App_id: appId,
       },
-    }).then((res) => res.json());
+    }).then((res) => (res.ok ? res.json() : Promise.reject(res)));
   }
 
   static getAuthLink({ appId, socialId }) {
@@ -18,7 +18,7 @@ class AuthAPI {
         App_id: appId,
       },
       body: JSON.stringify({ social_id: socialId }),
-    }).then((res) => res.json());
+    }).then((res) => (res.ok ? res.json() : Promise.reject(res)));
   }
 }
 
