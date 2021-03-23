@@ -12,4 +12,5 @@ module.exports = {
     'no-console': 'off',
   },
   plugins: ['prettier'],
+  parser: '@babel/eslint-parser',
 };
