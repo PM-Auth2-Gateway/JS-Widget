@@ -1,17 +1,41 @@
 import AuthAPI from './AuthAPI';
 import SocialButton from './SocialButton';
+import emitter from './EventEmitter';
+import { userProfile } from './mockedData';
 
 class AuthPM {
   #appId;
 
   #target;
 
-  constructor(appId, target) {
+  constructor(appId, target, callback) {
     this.#appId = appId;
 
-    this.#setTarget(target);
+    this.#init(target, callback);
+  }
 
-    this.#target && this.#getAppList();
+  #init(target, callback) {
+    const isTargetSet = this.#setTarget(target);
+
+    if (!isTargetSet) {
+      return;
+    }
+
+    if (typeof callback === 'function') {
+      this.#getAppList();
+      this.getUserInfo = this.getUserInfo.bind(this, callback);
+
+      emitter.subscribe('loginEvent', this.getUserInfo);
+    } else {
+      console.warn('Callback is not a function');
+    }
+  }
+
+  // maybe should be use instance prop in future
+  // eslint-disable-next-line class-methods-use-this
+  getUserInfo(callback) {
+    // TODO request to get user info
+    callback(userProfile);
   }
 
   #setTarget(target) {
@@ -31,13 +55,15 @@ class AuthPM {
       }
       default: {
         console.warn('Invalid type of target, check configuration');
-        return;
+        return false;
       }
     }
 
     if (!this.#target) {
       console.warn('Can not find target, check configuration');
     }
+
+    return !!this.#target;
   }
 
   #getAppList() {

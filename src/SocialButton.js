@@ -1,4 +1,6 @@
 import AuthAPI from './AuthAPI';
+import emitter from './EventEmitter';
+
 import { mockedAuthLink } from './mockedData';
 
 import './style.css';
@@ -60,8 +62,7 @@ class SocialButton extends HTMLElement {
     timerId = setInterval(() => {
       if (loginModal.closed) {
         clearInterval(timerId);
-        // TODO request to get user info
-        console.log('request');
+        emitter.emit('loginEvent');
       }
     }, 1000);
   }

@@ -9,6 +9,17 @@ const mockedAuthLink = {
   state: 'session_id',
 };
 
-const userProfile = {};
+const userProfile = {
+  id: '1',
+  accessToken: 'accessToken-1',
+  refreshToken: 'refreshToken-1',
+  expiresIn: 'expires-1',
+  firstName: 'first name',
+  lastName: 'last name',
+  email: 'email@email.com',
+  isVerifiedEmail: 'isVerifiedTrue',
+  photo: 'photo-url',
+  locale: 'locale',
+};
 
 export { mockedAuthLink, userProfile };
