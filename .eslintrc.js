@@ -10,6 +10,8 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
+    'no-unused-expressions': ['error', { allowShortCircuit: true }],
   },
   plugins: ['prettier'],
+  parser: '@babel/eslint-parser',
 };
