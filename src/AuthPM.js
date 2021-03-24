@@ -14,16 +14,27 @@ class AuthPM {
   }
 
   #setTarget(target) {
-    if (AuthPM.#isDomElement(target)) {
-      this.#target = target;
-      return;
+    switch (typeof target) {
+      case 'object': {
+        if (AuthPM.#isDomElementExist(target)) {
+          this.#target = target;
+        }
+        break;
+      }
+      case 'string': {
+        const possibleTarget = document.querySelector(target);
+        if (AuthPM.#isDomElementExist(possibleTarget)) {
+          this.#target = possibleTarget;
+        }
+        break;
+      }
+      default: {
+        console.warn('Invalid type of target, check configuration');
+        return;
+      }
     }
 
-    const possibleTarget = document.querySelector(target);
-
-    if (AuthPM.#isDomElement(possibleTarget)) {
-      this.#target = possibleTarget;
-    } else {
+    if (!this.#target) {
       console.warn('Can not find target, check configuration');
     }
   }
@@ -68,8 +79,8 @@ class AuthPM {
     console.log(urlConfig);
   }
 
-  static #isDomElement(obj) {
-    return obj instanceof Element;
+  static #isDomElementExist(obj) {
+    return obj instanceof Element && document.body.contains(obj);
   }
 }
 
