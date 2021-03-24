@@ -2,11 +2,11 @@
   "name": "js-widget",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/library.js",
   "scripts": {
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "lint":"eslint ./src --max-warnings=0"
+    "lint": "eslint ./src --max-warnings=0"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
+    "css-loader": "^5.1.4",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
@@ -35,6 +36,7 @@
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
+    "style-loader": "^2.0.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "^5.7.3"

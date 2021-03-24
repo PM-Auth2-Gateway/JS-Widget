@@ -1,4 +1,5 @@
 import AuthAPI from './AuthAPI';
+import SocialButton from './SocialButton';
 
 class AuthPM {
   #appId;
@@ -48,35 +49,12 @@ class AuthPM {
   }
 
   #renderSocials(socials) {
-    socials.forEach(({ id, name }) => {
-      const btn = this.#renderButton({ id, name });
+    customElements.define('social-btn', SocialButton);
 
+    socials.forEach(({ id, name }) => {
+      const btn = new SocialButton({ id, name, appId: this.#appId });
       this.#target.appendChild(btn);
     });
-  }
-
-  #renderButton({ id, name }) {
-    const clickHandler = (event) => {
-      event.preventDefault();
-
-      AuthAPI.getAuthLink({ appId: this.#appId, socialId: id })
-        .then((data) => AuthPM.#openLoginWindow(data))
-        .catch(() => {
-          console.warn('Something went wrong, sorry');
-        });
-    };
-
-    // TODO add button stylization
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = name;
-    btn.addEventListener('click', clickHandler);
-
-    return btn;
-  }
-
-  static #openLoginWindow(urlConfig) {
-    console.log(urlConfig);
   }
 
   static #isDomElementExist(obj) {
