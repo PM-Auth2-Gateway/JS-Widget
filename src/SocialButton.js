@@ -1,4 +1,5 @@
 import AuthAPI from './AuthAPI';
+import { mockedAuthLink } from './mockedData';
 
 import './style.css';
 
@@ -6,6 +7,8 @@ class SocialButton extends HTMLElement {
   #socialId;
 
   #appId;
+
+  static timerId;
 
   constructor({ id, name, appId }) {
     super();
@@ -36,20 +39,42 @@ class SocialButton extends HTMLElement {
       });
   }
 
-  #styleComponent() {
-    this.style.display = 'block';
-    this.style.maxWidth = '150px';
-    this.style.color = '#3c4146';
-    this.style.backgroundColor = '#fff';
-    this.style.padding = '10px';
-    this.style.borderRadius = '3px';
-    this.style.border = '1px solid #d6d9dc';
-    this.style.fontSize = '13px';
-    this.style.margin = '4px';
+  // eslint-disable-next-line no-unused-vars
+  static #openModalWindow(urlConfig) {
+    let { timerId } = SocialButton;
+
+    // TODO swap to urlConfig when backend will be done
+    const url = SocialButton.#createUrl(mockedAuthLink);
+
+    const loginModal = window.open(
+      url,
+      'Authentication Modal',
+      'width=972,height=660,modal=yes,alwaysRaised=yes'
+    );
+
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    timerId = setInterval(() => {
+      if (loginModal.closed) {
+        clearInterval(timerId);
+        // TODO request to get user info
+        console.log('request');
+      }
+    }, 1000);
   }
 
-  static #openModalWindow(urlConfig) {
-    console.log(urlConfig);
+  static #createUrl(urlConfig) {
+    const url = new URL(urlConfig.auth_uri);
+    Object.entries(urlConfig).forEach(([name, value]) => {
+      if (name !== 'auth_uri') {
+        url.searchParams.set(name, value);
+      }
+    });
+
+    return url.toString();
   }
 }
 
