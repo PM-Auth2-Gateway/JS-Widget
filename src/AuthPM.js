@@ -38,19 +38,30 @@ class AuthPM {
 
   #renderSocials(socials) {
     socials.forEach(({ id, name }) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = name;
-      btn.addEventListener('click', () => {
-        AuthAPI.getAuthLink({ appId: this.#appId, socialId: id })
-          .then((data) => AuthPM.#openLoginWindow(data))
-          .catch(() => {
-            console.warn('Something went wrong, sorry');
-          });
-      });
+      const btn = this.#renderButton({ id, name });
 
       this.#target.appendChild(btn);
     });
+  }
+
+  #renderButton({ id, name }) {
+    const clickHandler = (event) => {
+      event.preventDefault();
+
+      AuthAPI.getAuthLink({ appId: this.#appId, socialId: id })
+        .then((data) => AuthPM.#openLoginWindow(data))
+        .catch(() => {
+          console.warn('Something went wrong, sorry');
+        });
+    };
+
+    // TODO add button stylization
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = name;
+    btn.addEventListener('click', clickHandler);
+
+    return btn;
   }
 
   static #openLoginWindow(urlConfig) {
