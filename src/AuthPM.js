@@ -86,10 +86,17 @@ class AuthPM {
   #renderSocials(socials) {
     customElements.define('social-btn', SocialButton);
 
+    const container = document.createElement('div');
+    container.classList.add('socials-container');
+    // TODO get direction from backend
+    container.style.flexDirection = 'row';
+
     socials.forEach(({ id, name }) => {
       const btn = new SocialButton({ id, name, appId: this.#appId });
-      this.#target.appendChild(btn);
+      container.appendChild(btn);
     });
+
+    this.#target.appendChild(container);
   }
 
   static #isDomElementExist(obj) {
