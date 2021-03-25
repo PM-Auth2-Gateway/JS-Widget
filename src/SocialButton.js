@@ -31,7 +31,6 @@ class SocialButton extends HTMLElement {
   }
 
   #createBtn(name) {
-    console.log('ads');
     const img = document.createElement('img');
     img.src = icons[name];
     img.alt = `${icons[name]} logo`;
