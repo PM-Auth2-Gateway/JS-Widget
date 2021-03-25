@@ -8,7 +8,7 @@ module.exports = {
     library: 'AuthPM',
     libraryExport: 'default',
     libraryTarget: 'umd',
-    globalObject: "this"
+    globalObject: 'this',
   },
   module: {
     rules: [
@@ -17,10 +17,14 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {
     extensions: ['.js'],
     modules: [path.resolve(__dirname, 'src')],
-  }
+  },
 };

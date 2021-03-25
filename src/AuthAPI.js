@@ -17,7 +17,18 @@ class AuthAPI {
         'Content-Type': 'application/json',
         App_id: appId,
       },
-      body: JSON.stringify({ social_id: socialId }),
+      body: JSON.stringify({ social_id: socialId, device: 'browser' }),
+    }).then((res) => (res.ok ? res.json() : Promise.reject(res)));
+  }
+
+  static getUserProfile({ appId, sessionId }) {
+    return fetch(`${AuthAPI.#url}/Profile/info`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        App_id: appId,
+      },
+      body: JSON.stringify({ session_id: sessionId }),
     }).then((res) => (res.ok ? res.json() : Promise.reject(res)));
   }
 }

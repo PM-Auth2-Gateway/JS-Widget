@@ -1,0 +1,28 @@
+.btn {
+  font-family: Arial, serif;
+  display: block;
+  max-width: 150px;
+  font-size: 15px;
+  color: #3c4146;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #d6d9dc;
+  margin: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s ease-in-out all;
+}
+
+.btn:hover {
+  border-color: #c8ccd0;
+  background-color: #eff0f1;
+}
+
+.btn:focus {
+  border-color: #c8ccd0;
+  background-color: #eff0f1;
+  color: #242729;
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, 0.15);
+  outline: none;
+}

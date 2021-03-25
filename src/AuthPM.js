@@ -1,16 +1,50 @@
 import AuthAPI from './AuthAPI';
+import SocialButton from './SocialButton';
+import emitter from './EventEmitter';
 
 class AuthPM {
   #appId;
 
   #target;
 
-  constructor(appId, target) {
+  static sessionId;
+
+  constructor(appId, target, callback) {
     this.#appId = appId;
 
-    this.#setTarget(target);
+    this.#init(target, callback);
+  }
 
-    this.#target && this.#getAppList();
+  #init(target, callback) {
+    const isTargetSet = this.#setTarget(target);
+
+    if (!isTargetSet) {
+      return;
+    }
+
+    if (typeof callback === 'function') {
+      this.#getAppList();
+      this.getUserInfo = this.getUserInfo.bind(this, callback);
+
+      emitter.subscribe('loginEvent', this.getUserInfo);
+    } else {
+      console.warn('Callback is not a function');
+    }
+  }
+
+  getUserInfo(callback) {
+    if (!AuthPM.sessionId) {
+      return;
+    }
+
+    AuthAPI.getUserProfile({ appId: this.#appId, sessionId: AuthPM.sessionId })
+      .then((data) => {
+        callback(data);
+      })
+      .catch(() => console.warn('User cancel authorization'))
+      .finally(() => {
+        AuthPM.sessionId = null;
+      });
   }
 
   #setTarget(target) {
@@ -30,13 +64,15 @@ class AuthPM {
       }
       default: {
         console.warn('Invalid type of target, check configuration');
-        return;
+        return false;
       }
     }
 
     if (!this.#target) {
       console.warn('Can not find target, check configuration');
     }
+
+    return !!this.#target;
   }
 
   #getAppList() {
@@ -48,35 +84,12 @@ class AuthPM {
   }
 
   #renderSocials(socials) {
-    socials.forEach(({ id, name }) => {
-      const btn = this.#renderButton({ id, name });
+    customElements.define('social-btn', SocialButton);
 
+    socials.forEach(({ id, name }) => {
+      const btn = new SocialButton({ id, name, appId: this.#appId });
       this.#target.appendChild(btn);
     });
-  }
-
-  #renderButton({ id, name }) {
-    const clickHandler = (event) => {
-      event.preventDefault();
-
-      AuthAPI.getAuthLink({ appId: this.#appId, socialId: id })
-        .then((data) => AuthPM.#openLoginWindow(data))
-        .catch(() => {
-          console.warn('Something went wrong, sorry');
-        });
-    };
-
-    // TODO add button stylization
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = name;
-    btn.addEventListener('click', clickHandler);
-
-    return btn;
-  }
-
-  static #openLoginWindow(urlConfig) {
-    console.log(urlConfig);
   }
 
   static #isDomElementExist(obj) {
