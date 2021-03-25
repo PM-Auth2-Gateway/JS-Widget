@@ -11,6 +11,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
+    'import/no-cycle': 'off',
   },
   plugins: ['prettier'],
   parser: '@babel/eslint-parser',

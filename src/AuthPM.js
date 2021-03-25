@@ -1,12 +1,13 @@
 import AuthAPI from './AuthAPI';
 import SocialButton from './SocialButton';
 import emitter from './EventEmitter';
-import { userProfile } from './mockedData';
 
 class AuthPM {
   #appId;
 
   #target;
+
+  static sessionId;
 
   constructor(appId, target, callback) {
     this.#appId = appId;
@@ -31,11 +32,19 @@ class AuthPM {
     }
   }
 
-  // maybe should be use instance prop in future
-  // eslint-disable-next-line class-methods-use-this
   getUserInfo(callback) {
-    // TODO request to get user info
-    callback(userProfile);
+    if (!AuthPM.sessionId) {
+      return;
+    }
+
+    AuthAPI.getUserProfile({ appId: this.#appId, sessionId: AuthPM.sessionId })
+      .then((data) => {
+        callback(data);
+      })
+      .catch(() => console.warn('User cancel authorization'))
+      .finally(() => {
+        AuthPM.sessionId = null;
+      });
   }
 
   #setTarget(target) {

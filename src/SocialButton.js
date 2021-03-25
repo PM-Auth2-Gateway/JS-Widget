@@ -1,7 +1,6 @@
 import AuthAPI from './AuthAPI';
+import AuthPM from './AuthPM';
 import emitter from './EventEmitter';
-
-import { mockedAuthLink } from './mockedData';
 
 import './style.css';
 
@@ -41,12 +40,10 @@ class SocialButton extends HTMLElement {
       });
   }
 
-  // eslint-disable-next-line no-unused-vars
   static #openModalWindow(urlConfig) {
     let { timerId } = SocialButton;
 
-    // TODO swap to urlConfig when backend will be done
-    const url = SocialButton.#createUrl(mockedAuthLink);
+    const url = SocialButton.#createUrl(urlConfig);
 
     const loginModal = window.open(
       url,
@@ -68,6 +65,8 @@ class SocialButton extends HTMLElement {
   }
 
   static #createUrl(urlConfig) {
+    AuthPM.sessionId = urlConfig.state;
+
     const url = new URL(urlConfig.auth_uri);
     Object.entries(urlConfig).forEach(([name, value]) => {
       if (name !== 'auth_uri') {
