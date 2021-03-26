@@ -56,12 +56,10 @@ class SocialButton extends HTMLElement {
   }
 
   static #openModalWindow(urlConfig) {
-    let { modal } = SocialButton;
-
     const url = SocialButton.#createUrl(urlConfig);
 
-    if (!modal) {
-      modal = window.open(
+    if (!SocialButton.modal) {
+      SocialButton.modal = window.open(
         url,
         'Authentication Modal',
         'width=972,height=660,modal=yes,alwaysRaised=yes'
@@ -69,8 +67,8 @@ class SocialButton extends HTMLElement {
 
       SocialButton.#modalWindowChecker();
     } else {
-      modal.location.href = url;
-      modal.focus();
+      SocialButton.modal.location.href = url;
+      SocialButton.modal.focus();
     }
   }
 
@@ -88,7 +86,7 @@ class SocialButton extends HTMLElement {
   }
 
   static #modalWindowChecker() {
-    let { timerId, modal } = SocialButton;
+    let { timerId } = SocialButton;
 
     if (timerId) {
       clearInterval(timerId);
@@ -96,8 +94,8 @@ class SocialButton extends HTMLElement {
     }
 
     timerId = setInterval(() => {
-      if (modal.closed) {
-        modal = null;
+      if (SocialButton.modal.closed) {
+        SocialButton.modal = null;
         clearInterval(timerId);
         emitter.emit('loginEvent');
       }
