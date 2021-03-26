@@ -1,12 +1,15 @@
 .socials-container {
   display: flex;
   flex-wrap: wrap;
+    width: 100%;
+    gap: 16px;
+    margin: 8px 0;
 }
 
 social-btn {
   display: flex;
-  flex: 0 0 auto;
-  font-family: Arial, serif;
+  flex: 1 1 auto;
+  font-family: inherit;
   min-width: 150px;
   font-size: 15px;
   color: #3c4146;
@@ -14,7 +17,6 @@ social-btn {
   padding: 10px;
   border-radius: 3px;
   border: 1px solid #d6d9dc;
-  margin: 8px;
   cursor: pointer;
   justify-content: center;
   align-items: center;
