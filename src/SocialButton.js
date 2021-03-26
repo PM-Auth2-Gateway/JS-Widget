@@ -13,6 +13,8 @@ class SocialButton extends HTMLElement {
 
   static timerId;
 
+  static modal;
+
   constructor({ id, name, appId }) {
     super();
 
@@ -54,27 +56,22 @@ class SocialButton extends HTMLElement {
   }
 
   static #openModalWindow(urlConfig) {
-    let { timerId } = SocialButton;
+    let { modal } = SocialButton;
 
     const url = SocialButton.#createUrl(urlConfig);
 
-    const loginModal = window.open(
-      url,
-      'Authentication Modal',
-      'width=972,height=660,modal=yes,alwaysRaised=yes'
-    );
+    if (!modal) {
+      modal = window.open(
+        url,
+        'Authentication Modal',
+        'width=972,height=660,modal=yes,alwaysRaised=yes'
+      );
 
-    if (timerId) {
-      clearInterval(timerId);
-      timerId = null;
+      SocialButton.#modalWindowChecker();
+    } else {
+      modal.location.href = url;
+      modal.focus();
     }
-
-    timerId = setInterval(() => {
-      if (loginModal.closed) {
-        clearInterval(timerId);
-        emitter.emit('loginEvent');
-      }
-    }, 1000);
   }
 
   static #createUrl(urlConfig) {
@@ -88,6 +85,23 @@ class SocialButton extends HTMLElement {
     });
 
     return url.toString();
+  }
+
+  static #modalWindowChecker() {
+    let { timerId, modal } = SocialButton;
+
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    timerId = setInterval(() => {
+      if (modal.closed) {
+        modal = null;
+        clearInterval(timerId);
+        emitter.emit('loginEvent');
+      }
+    }, 1000);
   }
 }
 
