@@ -7,10 +7,14 @@ class AuthPM {
 
   #target;
 
+  #customization = {};
+
   static sessionId;
 
-  constructor(appId, target, callback) {
+  constructor({ appId, target, callback, customization }) {
     this.#appId = appId;
+
+    customization && (this.#customization = customization);
 
     this.#init(target, callback);
   }
@@ -86,12 +90,7 @@ class AuthPM {
   #renderSocials(socials) {
     customElements.define('social-btn', SocialButton);
 
-    const container = document.createElement('div');
-    container.classList.add('socials-container');
-    // TODO get direction from backend
-    container.style.flexDirection = 'row';
-
-    console.log(socials);
+    const socialsContainer = this.#createSocialsContainer();
 
     socials.forEach(({ id, name, logoPath }) => {
       const btn = new SocialButton({
@@ -100,10 +99,21 @@ class AuthPM {
         appId: this.#appId,
         logo: logoPath,
       });
-      container.appendChild(btn);
+      socialsContainer.appendChild(btn);
     });
 
-    this.#target.appendChild(container);
+    this.#target.appendChild(socialsContainer);
+  }
+
+  #createSocialsContainer() {
+    const container = document.createElement('div');
+    container.classList.add('socials-container');
+
+    if (this.#customization.direction) {
+      container.style.flexDirection = this.#customization.direction;
+    }
+
+    return container;
   }
 
   static #isDomElementExist(obj) {
