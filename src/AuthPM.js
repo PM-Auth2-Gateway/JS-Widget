@@ -43,9 +43,20 @@ class AuthPM {
 
     AuthAPI.getUserProfile({ appId: this.#appId, sessionId: AuthPM.sessionId })
       .then((data) => {
-        callback(data);
+        callback(data, null);
       })
-      .catch(() => console.warn('User cancel authorization'))
+      .catch((error) => {
+        error.json().then((res) => {
+          switch (res.errorCode) {
+            case 10:
+            case 14:
+              callback(null, res);
+              break;
+            default:
+              console.warn(res.error);
+          }
+        });
+      })
       .finally(() => {
         AuthPM.sessionId = null;
       });
