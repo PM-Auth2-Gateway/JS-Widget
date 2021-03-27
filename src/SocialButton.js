@@ -2,6 +2,8 @@ import AuthAPI from './AuthAPI';
 import AuthPM from './AuthPM';
 import emitter from './EventEmitter';
 
+import icons from './mockedData';
+
 import './style.css';
 
 class SocialButton extends HTMLElement {
@@ -11,15 +13,15 @@ class SocialButton extends HTMLElement {
 
   static timerId;
 
+  static modal;
+
   constructor({ id, name, appId }) {
     super();
 
     this.#socialId = id;
     this.#appId = appId;
 
-    this.innerHTML = `Sign in with ${name}`;
-
-    this.classList.add('btn');
+    this.#createBtn(name);
   }
 
   connectedCallback() {
@@ -28,6 +30,19 @@ class SocialButton extends HTMLElement {
 
   disconnectedCallback() {
     this.removeEventListener('click', this.#onClick);
+  }
+
+  #createBtn(name) {
+    const img = document.createElement('img');
+    img.src = icons[name];
+    img.alt = `${icons[name]} logo`;
+
+    const span = document.createElement('span');
+    span.textContent = `Sign in with ${name}`;
+
+    this.append(img, span);
+
+    this.classList.add('btn');
   }
 
   #onClick(event) {
@@ -41,27 +56,20 @@ class SocialButton extends HTMLElement {
   }
 
   static #openModalWindow(urlConfig) {
-    let { timerId } = SocialButton;
-
     const url = SocialButton.#createUrl(urlConfig);
 
-    const loginModal = window.open(
-      url,
-      'Authentication Modal',
-      'width=972,height=660,modal=yes,alwaysRaised=yes'
-    );
+    if (!SocialButton.modal) {
+      SocialButton.modal = window.open(
+        url,
+        'Authentication Modal',
+        'width=972,height=660,modal=yes,alwaysRaised=yes'
+      );
 
-    if (timerId) {
-      clearInterval(timerId);
-      timerId = null;
+      SocialButton.#modalWindowChecker();
+    } else {
+      SocialButton.modal.location.href = url;
+      SocialButton.modal.focus();
     }
-
-    timerId = setInterval(() => {
-      if (loginModal.closed) {
-        clearInterval(timerId);
-        emitter.emit('loginEvent');
-      }
-    }, 1000);
   }
 
   static #createUrl(urlConfig) {
@@ -75,6 +83,23 @@ class SocialButton extends HTMLElement {
     });
 
     return url.toString();
+  }
+
+  static #modalWindowChecker() {
+    let { timerId } = SocialButton;
+
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    timerId = setInterval(() => {
+      if (SocialButton.modal.closed) {
+        SocialButton.modal = null;
+        clearInterval(timerId);
+        emitter.emit('loginEvent');
+      }
+    }, 1000);
   }
 }
 
