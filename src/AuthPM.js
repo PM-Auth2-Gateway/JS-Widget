@@ -91,8 +91,15 @@ class AuthPM {
     // TODO get direction from backend
     container.style.flexDirection = 'row';
 
-    socials.forEach(({ id, name }) => {
-      const btn = new SocialButton({ id, name, appId: this.#appId });
+    console.log(socials);
+
+    socials.forEach(({ id, name, logoPath }) => {
+      const btn = new SocialButton({
+        id,
+        name,
+        appId: this.#appId,
+        logo: logoPath,
+      });
       container.appendChild(btn);
     });
 

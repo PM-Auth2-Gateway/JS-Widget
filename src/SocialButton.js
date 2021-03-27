@@ -2,8 +2,6 @@ import AuthAPI from './AuthAPI';
 import AuthPM from './AuthPM';
 import emitter from './EventEmitter';
 
-import icons from './mockedData';
-
 import './style.css';
 
 class SocialButton extends HTMLElement {
@@ -15,13 +13,13 @@ class SocialButton extends HTMLElement {
 
   static modal;
 
-  constructor({ id, name, appId }) {
+  constructor({ id, name, appId, logo }) {
     super();
 
     this.#socialId = id;
     this.#appId = appId;
 
-    this.#createBtn(name);
+    this.#createBtn(name, logo);
   }
 
   connectedCallback() {
@@ -32,10 +30,10 @@ class SocialButton extends HTMLElement {
     this.removeEventListener('click', this.#onClick);
   }
 
-  #createBtn(name) {
+  #createBtn(name, logo) {
     const img = document.createElement('img');
-    img.src = icons[name];
-    img.alt = `${icons[name]} logo`;
+    img.src = logo;
+    img.alt = `${name} logo`;
 
     const span = document.createElement('span');
     span.textContent = `Sign in with ${name}`;
