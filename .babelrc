@@ -6,12 +6,6 @@
     ],
     [
       "@babel/plugin-proposal-private-methods"
-    ],
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "regenerator": true
-      }
     ]
   ]
 }
