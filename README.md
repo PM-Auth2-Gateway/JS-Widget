@@ -74,7 +74,7 @@ The error object includes such fields
 
 Using this object, you can customize the display of buttons
 
-* ##### `direction`property
+* ##### `direction` property
 
   This property specifies how social buttons will be displayed <br/>
   Possible options: `row / row-reverse / column / column-reverse` <br/>
