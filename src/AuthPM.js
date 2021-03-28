@@ -7,10 +7,14 @@ class AuthPM {
 
   #target;
 
+  #customization = {};
+
   static sessionId;
 
-  constructor(appId, target, callback) {
+  constructor({ appId, target, callback, customization }) {
     this.#appId = appId;
+
+    customization && (this.#customization = customization);
 
     this.#init(target, callback);
   }
@@ -39,9 +43,20 @@ class AuthPM {
 
     AuthAPI.getUserProfile({ appId: this.#appId, sessionId: AuthPM.sessionId })
       .then((data) => {
-        callback(data);
+        callback(data, null);
       })
-      .catch(() => console.warn('User cancel authorization'))
+      .catch((error) => {
+        error.json().then((res) => {
+          switch (res.errorCode) {
+            case 10:
+            case 14:
+              callback(null, res);
+              break;
+            default:
+              console.warn(res.error);
+          }
+        });
+      })
       .finally(() => {
         AuthPM.sessionId = null;
       });
@@ -86,17 +101,30 @@ class AuthPM {
   #renderSocials(socials) {
     customElements.define('social-btn', SocialButton);
 
-    const container = document.createElement('div');
-    container.classList.add('socials-container');
-    // TODO get direction from backend
-    container.style.flexDirection = 'row';
+    const socialsContainer = this.#createSocialsContainer();
 
-    socials.forEach(({ id, name }) => {
-      const btn = new SocialButton({ id, name, appId: this.#appId });
-      container.appendChild(btn);
+    socials.forEach(({ id, name, logoPath }) => {
+      const btn = new SocialButton({
+        id,
+        name,
+        appId: this.#appId,
+        logo: logoPath,
+      });
+      socialsContainer.appendChild(btn);
     });
 
-    this.#target.appendChild(container);
+    this.#target.appendChild(socialsContainer);
+  }
+
+  #createSocialsContainer() {
+    const container = document.createElement('div');
+    container.classList.add('socials-container');
+
+    if (this.#customization.direction) {
+      container.style.flexDirection = this.#customization.direction;
+    }
+
+    return container;
   }
 
   static #isDomElementExist(obj) {
