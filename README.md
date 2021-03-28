@@ -79,3 +79,7 @@ Using this object, you can customize the display of buttons
   This property specifies how social buttons will be displayed <br/>
   Possible options: `row / row-reverse / column / column-reverse` <br/>
   Default value: `row`
+
+## What to do if widget does not work?
+
+[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggTFJcblxuQShTdGFydClcblxuQSAtLT4gQltMb29rIGZvciBhbiBpdGVtXVxuXG5CW2NvbmZpZyB3aWRnZXRdIC0tPiBDe0RvZXMgaXQgd29yaz99XG5DIC0tIFllcyAtLT4gRFtHcmVhdCFdXG5DIC0tIE5vIC0tPiBFW2NoZWNrIGNvbmZpZ3VyYXRpb25dXG5FIC0tPiBCIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggTFJcblxuQShTdGFydClcblxuQSAtLT4gQltMb29rIGZvciBhbiBpdGVtXVxuXG5CW2NvbmZpZyB3aWRnZXRdIC0tPiBDe0RvZXMgaXQgd29yaz99XG5DIC0tIFllcyAtLT4gRFtHcmVhdCFdXG5DIC0tIE5vIC0tPiBFW2NoZWNrIGNvbmZpZ3VyYXRpb25dXG5FIC0tPiBCIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0)
